@@ -12,6 +12,7 @@
             --dark: #c9184a;
             --white: #fff0f3;
             --hover: #fff5f7;
+            --success: #2dc653;
         }
 
         body {
@@ -73,12 +74,12 @@
 
         p.subtitle {
             color: #ff5c8a;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             font-size: 1.1rem;
         }
 
         .input-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             text-align: left;
         }
 
@@ -119,6 +120,7 @@
             width: 100%;
             transition: 0.3s;
             box-shadow: 0 5px 15px rgba(201, 24, 74, 0.3);
+            margin-top: 10px;
         }
 
         button.check-btn:hover {
@@ -210,6 +212,7 @@
             background: var(--white);
             color: #555;
             font-size: 0.9rem;
+            user-select: none;
         }
 
         .time-card:hover {
@@ -223,12 +226,35 @@
             color: white;
             border-color: var(--dark);
             box-shadow: 0 4px 10px rgba(201, 24, 74, 0.3);
+            transform: scale(1.05);
         }
 
         .time-date {
             font-weight: bold;
             display: block;
             margin-bottom: 4px;
+        }
+
+        /* Confirm Button inside Modal */
+        .confirm-btn {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-family: 'Fredoka', sans-serif;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.3s;
+            box-shadow: 0 4px 10px rgba(45, 198, 83, 0.3);
+            display: none; /* Hidden until time is selected */
+            margin-top: 10px;
+        }
+
+        .confirm-btn:hover {
+            background: #208b3a;
+            transform: translateY(-2px);
         }
 
         /* IG Contact */
@@ -246,6 +272,12 @@
             font-weight: bold;
         }
 
+        .success-animation {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            animation: popIn 0.5s ease;
+        }
+
         .hidden { display: none; }
     </style>
 </head>
@@ -260,6 +292,19 @@
         <div class="input-group">
             <label>Nickname</label>
             <input type="text" id="nicknameInput" placeholder="e.g. Namphon">
+        </div>
+
+        <div class="input-group">
+            <label>Major</label>
+            <select id="majorInput">
+                <option value="" disabled selected>Select Major</option>
+                <option value="ICE">ICE</option>
+                <option value="ADME">ADME</option>
+                <option value="AERO">AERO</option>
+                <option value="NANO">NANO</option>
+                <option value="ROBOT">ROBOT</option>
+                <option value="OTHER">Other</option>
+            </select>
         </div>
 
         <div class="input-group">
@@ -299,7 +344,7 @@
             { "id": "jasmin_1", "name": "Jasmin", "message": "Hello Jasmin, Nam bought you 1 cookies" },
             { "id": "jeda_3", "name": "Jeda", "message": "Hello Jeda, Mind #1 Adme bought you 1 cookies" },
             { "id": "kaning_4", "name": "Kaning", "message": "Hello Kaning, someone bought you a cookies" },
-            { "id": "koch / กช_1", "name": "Koch", "message": "Hello Koch, someone bought you a cookies" },
+            { "id": "koch_1", "name": "Koch", "message": "Hello Koch, someone bought you a cookies" },
             { "id": "korya_2", "name": "Korya", "message": "Hello Korya, 2 people bought you a cookie" },
             { "id": "lara_4", "name": "Lara", "message": "Hello Lara, Nine #4 ICE bought you 1 cookies" },
             { "id": "min_4", "name": "Min", "message": "Hello Min, Nine #4 ICE bought you 1 cookies" },
@@ -319,23 +364,36 @@
             { "id": "emmy_3", "name": "Emmy", "message": "Hello Emmy, someone bought you a cookies" }
         ];
 
+        // Global variables to hold selection
+        let currentSelection = {
+            nickname: "",
+            pickupDate: "",
+            pickupTime: ""
+        };
+
         // --- 2. LOGIC ---
         function checkCookies() {
             const nickname = document.getElementById('nicknameInput').value.trim().toLowerCase();
             const year = document.getElementById('yearInput').value;
+            const major = document.getElementById('majorInput').value;
+            
             const modal = document.getElementById('resultModal');
             const modalBody = document.getElementById('modalBody');
 
-            if (!nickname || !year) {
-                alert("Please enter both your Nickname and Year! 💕");
+            // Validation: Ensure Major is also selected
+            if (!nickname || !year || !major) {
+                alert("Please fill in Nickname, Major, and Year! 💕");
                 return;
             }
 
+            // Note: Database uses only nickname_year for ID
             const searchId = `${nickname}_${year}`;
             const result = database.find(user => user.id === searchId);
 
+            currentSelection.nickname = nickname;
+
             if (result) {
-                // SUCCESS
+                // SUCCESS: Show Message + Time Picker
                 modalBody.innerHTML = `
                     <div class="result-title">Yay! You've got mail! 💌</div>
                     <p class="result-text">
@@ -346,23 +404,25 @@
 
                     <div class="time-selection-title">Select your pickup time:</div>
                     <div class="time-grid">
-                        <div class="time-card" onclick="selectTime(this)">
+                        <div class="time-card" onclick="selectTime(this, 'Fri 13 Feb', '12:00 - 13:00')">
                             <span class="time-date">Fri 13 Feb</span>
                             12.00 - 13.00
                         </div>
-                        <div class="time-card" onclick="selectTime(this)">
+                        <div class="time-card" onclick="selectTime(this, 'Fri 13 Feb', '15:00 - 17:00')">
                             <span class="time-date">Fri 13 Feb</span>
                             15.00 - 17.00
                         </div>
-                        <div class="time-card" onclick="selectTime(this)">
+                        <div class="time-card" onclick="selectTime(this, 'Mon 16 Feb', '12:00 - 13:00')">
                             <span class="time-date">Mon 16 Feb</span>
                             12.00 - 13.00
                         </div>
-                        <div class="time-card" onclick="selectTime(this)">
+                        <div class="time-card" onclick="selectTime(this, 'Mon 16 Feb', '15:00 - 17:00')">
                             <span class="time-date">Mon 16 Feb</span>
                             15.00 - 17.00
                         </div>
                     </div>
+
+                    <button id="confirmBtn" class="confirm-btn" onclick="confirmPickup()">Confirm Pickup ✅</button>
 
                     <div class="contact-footer">
                         For further information contact<br>
@@ -373,7 +433,7 @@
                 // FAILURE
                 modalBody.innerHTML = `
                     <div class="result-title">Oh no... 🥺</div>
-                    <p class="result-text">We couldn't find a cookie order for <strong>${document.getElementById('nicknameInput').value}</strong> in Year ${year}.</p>
+                    <p class="result-text">We couldn't find a cookie order for <strong>${document.getElementById('nicknameInput').value}</strong> (${major} Year ${year}).</p>
                     <div class="contact-footer">
                         If this is a mistake, contact us:<br>
                         📸 IG: <a href="https://instagram.com/isesc.chula" target="_blank">isesc.chula</a>
@@ -384,7 +444,7 @@
         }
 
         // Handle Visual Selection of Time Cards
-        function selectTime(element) {
+        function selectTime(element, date, time) {
             // Remove 'selected' class from all cards
             const cards = document.querySelectorAll('.time-card');
             cards.forEach(card => card.classList.remove('selected'));
@@ -392,8 +452,30 @@
             // Add 'selected' class to clicked card
             element.classList.add('selected');
             
-            // Note: Data is not saved to backend in this static version
-            // You could add an alert here like "Time selected!" if you want
+            // Store Data
+            currentSelection.pickupDate = date;
+            currentSelection.pickupTime = time;
+
+            // Show Confirm Button
+            document.getElementById('confirmBtn').style.display = 'block';
+        }
+
+        // Handle Confirmation Click
+        function confirmPickup() {
+            const modalBody = document.getElementById('modalBody');
+            
+            // In a real app, you would send 'currentSelection' to a backend here.
+            
+            modalBody.innerHTML = `
+                <div class="success-animation">🎉</div>
+                <div class="result-title">Confirmed!</div>
+                <p class="result-text">
+                    Great! We have reserved your slot.<br>
+                    See you on <strong>${currentSelection.pickupDate}</strong><br>
+                    at <strong>${currentSelection.pickupTime}</strong>.
+                </p>
+                <button class="check-btn" onclick="closeModal()">Close</button>
+            `;
         }
 
         function closeModal() {
