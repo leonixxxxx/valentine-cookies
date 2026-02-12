@@ -315,8 +315,8 @@
                 <option value="ADME">ADME</option>
                 <option value="AERO">AERO</option>
                 <option value="NANO">NANO</option>
-                <option value="ROBOT">ROBOT</option>
-                <option value="OTHER">Other</option>
+                <option value="AI">AI</option>
+                <option value="SEMI">SEMI</option>
             </select>
         </div>
 
@@ -345,36 +345,36 @@
     <script>
         // --- 1. THE DATABASE ---
         const database = [
-            { "id": "annie_4", "name": "Annie", "message": "Hello Annie, Nine #4 ICE bought you 1 cookies" },
-            { "id": "apple_1", "name": "Apple", "message": "Hello Apple, someone bought you a cookies" },
-            { "id": "arshi_1", "name": "Arshi", "message": "Hello Arshi, someone bought you a cookies" },
-            { "id": "bright_1", "name": "Bright", "message": "Hello Bright, someone bought you a cookies" },
-            { "id": "dear_4", "name": "Dear", "message": "Hello Dear, Nine #4 ICE bought you 1 cookies" },
-            { "id": "fangam_4", "name": "Fangam", "message": "Hello Fangam, Nine #4 ICE bought you 1 cookies" },
-            { "id": "fei_4", "name": "Fei", "message": "Hello Fei, Nine #4 ICE bought you 1 cookies" },
-            { "id": "helen_3", "name": "Helen", "message": "Hello Helen, Nine #4 ICE bought you 1 cookies" },
-            { "id": "ice_4", "name": "Ice", "message": "Hello Ice, Thee bought you 1 cookies" },
-            { "id": "jasmin_1", "name": "Jasmin", "message": "Hello Jasmin, Nam bought you 1 cookies" },
-            { "id": "jeda_3", "name": "Jeda", "message": "Hello Jeda, Mind #1 Adme bought you 1 cookies" },
-            { "id": "kaning_4", "name": "Kaning", "message": "Hello Kaning, someone bought you a cookies" },
-            { "id": "koch / กช_1", "name": "Koch", "message": "Hello Koch, someone bought you a cookies" },
+            { "id": "annie_4", "name": "Annie", "message": "Hello Annie, Nine #4 ICE bought you a cookie" },
+            { "id": "apple_1", "name": "Apple", "message": "Hello Apple, someone bought you a cookie" },
+            { "id": "arshi_1", "name": "Arshi", "message": "Hello Arshi, someone bought you a cookie" },
+            { "id": "bright_1", "name": "Bright", "message": "Hello Bright, someone bought you 5 cookies" },
+            { "id": "dear_4", "name": "Dear", "message": "Hello Dear, Nine #4 ICE bought you a cookie" },
+            { "id": "fangam_4", "name": "Fangam", "message": "Hello Fangam, Nine #4 ICE bought you a cookie" },
+            { "id": "fei_4", "name": "Fei", "message": "Hello Fei, Nine #4 ICE bought you a cookie" },
+            { "id": "helen_3", "name": "Helen", "message": "Hello Helen, Nine #4 ICE bought you a cookie" },
+            { "id": "ice_4", "name": "Ice", "message": "Hello Ice, Thee bought you a cookie" },
+            { "id": "jasmin_1", "name": "Jasmin", "message": "Hello Jasmin, Nam bought you a cookie" },
+            { "id": "jeda_3", "name": "Jeda", "message": "Hello Jeda, Mind #1 Adme bought you a cookie" },
+            { "id": "kaning_4", "name": "Kaning", "message": "Hello Kaning, someone bought you a cookie" },
+            { "id": "koch_1", "name": "Koch", "message": "Hello Koch, someone bought you a cookie" },
             { "id": "korya_2", "name": "Korya", "message": "Hello Korya, 2 people bought you a cookie" },
-            { "id": "lara_4", "name": "Lara", "message": "Hello Lara, Nine #4 ICE bought you 1 cookies" },
-            { "id": "min_4", "name": "Min", "message": "Hello Min, Nine #4 ICE bought you 1 cookies" },
-            { "id": "mook_1", "name": "Mook", "message": "Hello Mook, Nam bought you 1 cookies" },
-            { "id": "music_1", "name": "Music", "message": "Hello Music, Nine #4 ICE bought you 1 cookies" },
+            { "id": "lara_4", "name": "Lara", "message": "Hello Lara, Nine #4 ICE bought you a cookie" },
+            { "id": "min_4", "name": "Min", "message": "Hello Min, Nine #4 ICE bought you a cookie" },
+            { "id": "mook_1", "name": "Mook", "message": "Hello Mook, Nam bought you a cookie" },
+            { "id": "music_1", "name": "Music", "message": "Hello Music, Nine #4 ICE bought you a cookie" },
             { "id": "namphon_1", "name": "Namphon", "message": "Hello Namphon, Unging bought you 6 cookies" },
-            { "id": "nav_3", "name": "Nav", "message": "Hello Nav, Nine #4 ICE bought you 1 cookies" },
-            { "id": "neuy_3", "name": "Neuy", "message": "Hello Neuy, someone bought you a cookies" },
-            { "id": "nice_4", "name": "Nice", "message": "Hello Nice, Nine #4 ICE bought you 1 cookies" },
-            { "id": "now_1", "name": "Now", "message": "Hello Now, someone bought you a cookies" },
-            { "id": "nutty_2", "name": "Nutty", "message": "Hello Nutty, someone bought you a cookies" },
-            { "id": "oshin_4", "name": "Oshin", "message": "Hello Oshin, Nine #4 ICE bought you 1 cookies" },
+            { "id": "nav_3", "name": "Nav", "message": "Hello Nav, Nine #4 ICE bought you a cookie" },
+            { "id": "neuy_3", "name": "Neuy", "message": "Hello Neuy, someone bought you 2 cookies" },
+            { "id": "nice_4", "name": "Nice", "message": "Hello Nice, Nine #4 ICE bought you a cookie" },
+            { "id": "now_1", "name": "Now", "message": "Hello Now, someone bought you a cookie" },
+            { "id": "nutty_2", "name": "Nutty", "message": "Hello Nutty, someone bought you a cookie" },
+            { "id": "oshin_4", "name": "Oshin", "message": "Hello Oshin, Nine #4 ICE bought you a cookie" },
             { "id": "palmmy_3", "name": "Palmmy", "message": "Hello Palmmy, someone bought you a cookies" },
-            { "id": "paula_1", "name": "Paula", "message": "Hello Paula, Nine #4 ICE bought you 1 cookies" },
-            { "id": "shin_4", "name": "Shin", "message": "Hello Shin, Nine #4 ICE bought you 1 cookies" },
-            { "id": "tonkhao_4", "name": "Tonkhao", "message": "Hello Tonkhao, Nine #4 ICE bought you 1 cookies" },
-            { "id": "emmy_3", "name": "Emmy", "message": "Hello Emmy, someone bought you a cookies" }
+            { "id": "paula_1", "name": "Paula", "message": "Hello Paula, Nine #4 ICE bought you a cookie" },
+            { "id": "shin_4", "name": "Shin", "message": "Hello Shin, Nine #4 ICE bought you a cookie" },
+            { "id": "tonkhao_4", "name": "Tonkhao", "message": "Hello Tonkhao, Nine #4 ICE bought you a cookie" },
+            { "id": "emmy_3", "name": "Emmy", "message": "Hello Emmy, someone bought you a cookie" }
         ];
 
         // Global variables to hold selection
