@@ -128,6 +128,13 @@
             background: #a00f38;
             box-shadow: 0 8px 20px rgba(201, 24, 74, 0.4);
         }
+        
+        button.check-btn:disabled {
+            background: #ccc;
+            transform: none;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
 
         /* Popup Modal */
         .modal {
@@ -256,6 +263,12 @@
             background: #208b3a;
             transform: translateY(-2px);
         }
+        
+        .confirm-btn:disabled {
+            background: #ccc;
+            transform: none;
+            box-shadow: none;
+        }
 
         /* IG Contact */
         .contact-footer {
@@ -344,7 +357,7 @@
             { "id": "jasmin_1", "name": "Jasmin", "message": "Hello Jasmin, Nam bought you 1 cookies" },
             { "id": "jeda_3", "name": "Jeda", "message": "Hello Jeda, Mind #1 Adme bought you 1 cookies" },
             { "id": "kaning_4", "name": "Kaning", "message": "Hello Kaning, someone bought you a cookies" },
-            { "id": "koch_1", "name": "Koch", "message": "Hello Koch, someone bought you a cookies" },
+            { "id": "koch / กช_1", "name": "Koch", "message": "Hello Koch, someone bought you a cookies" },
             { "id": "korya_2", "name": "Korya", "message": "Hello Korya, 2 people bought you a cookie" },
             { "id": "lara_4", "name": "Lara", "message": "Hello Lara, Nine #4 ICE bought you 1 cookies" },
             { "id": "min_4", "name": "Min", "message": "Hello Min, Nine #4 ICE bought you 1 cookies" },
@@ -380,13 +393,13 @@
             const modal = document.getElementById('resultModal');
             const modalBody = document.getElementById('modalBody');
 
-            // Validation: Ensure Major is also selected
+            // Validation
             if (!nickname || !year || !major) {
                 alert("Please fill in Nickname, Major, and Year! 💕");
                 return;
             }
 
-            // Note: Database uses only nickname_year for ID
+            // Database Search
             const searchId = `${nickname}_${year}`;
             const result = database.find(user => user.id === searchId);
 
@@ -460,22 +473,54 @@
             document.getElementById('confirmBtn').style.display = 'block';
         }
 
-        // Handle Confirmation Click
+        // --- 3. SAVE TO GOOGLE SHEETS ---
         function confirmPickup() {
+            const confirmBtn = document.getElementById('confirmBtn');
             const modalBody = document.getElementById('modalBody');
-            
-            // In a real app, you would send 'currentSelection' to a backend here.
-            
-            modalBody.innerHTML = `
-                <div class="success-animation">🎉</div>
-                <div class="result-title">Confirmed!</div>
-                <p class="result-text">
-                    Great! We have reserved your slot.<br>
-                    See you on <strong>${currentSelection.pickupDate}</strong><br>
-                    at <strong>${currentSelection.pickupTime}</strong>.
-                </p>
-                <button class="check-btn" onclick="closeModal()">Close</button>
-            `;
+
+            // 1. Show Loading State
+            confirmBtn.innerText = "Saving... ⏳";
+            confirmBtn.disabled = true;
+
+            // 2. Prepare Data
+            const dataToSend = {
+                nickname: currentSelection.nickname,
+                major: document.getElementById('majorInput').value,
+                year: document.getElementById('yearInput').value,
+                pickupDate: currentSelection.pickupDate,
+                pickupTime: currentSelection.pickupTime
+            };
+
+            // 3. Send to Google Sheets (YOUR URL IS HERE)
+            const scriptURL = "https://script.google.com/macros/s/AKfycbxx0uG_AvgFFVgNDORewEbAv_xPm9uOTAWKZ0Ef5xSENqBPxddHKpq4BsOOhfRa40mU7w/exec";
+
+            fetch(scriptURL, {
+                method: 'POST',
+                mode: 'no-cors', // Important for Google Apps Script Web Apps
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(dataToSend)
+            })
+            .then(response => {
+                // 4. Show Success Message
+                modalBody.innerHTML = `
+                    <div class="success-animation">🎉</div>
+                    <div class="result-title">Confirmed!</div>
+                    <p class="result-text">
+                        Great! We have saved your spot.<br>
+                        See you on <strong>${currentSelection.pickupDate}</strong><br>
+                        at <strong>${currentSelection.pickupTime}</strong>.
+                    </p>
+                    <button class="check-btn" onclick="closeModal()">Close</button>
+                `;
+            })
+            .catch(error => {
+                console.error('Error!', error.message);
+                confirmBtn.innerText = "Try Again ❌";
+                confirmBtn.disabled = false;
+                alert("Something went wrong saving your data. Please check your internet connection.");
+            });
         }
 
         function closeModal() {
@@ -489,7 +534,7 @@
             }
         }
 
-        // --- 3. ANIMATION ---
+        // --- 4. ANIMATION ---
         function createHearts() {
             const container = document.getElementById('hearts-container');
             for(let i=0; i<15; i++) {
